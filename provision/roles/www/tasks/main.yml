@@ -1,0 +1,11 @@
+---
+- name: Installing apache2
+  apt: name="apache2=2.2.22-13+deb7u4" state=present
+  tag: web
+
+- name: Install apache modules
+  apache_modules: name={{ item }} state=present
+  with_items:
+    - php5
+    - mysqli
+    - rewrite
