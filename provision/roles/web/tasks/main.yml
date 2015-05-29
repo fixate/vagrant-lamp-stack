@@ -10,3 +10,13 @@
   tags: web
   with_items: apache_modules
   notify: restart apache2
+
+- name: Set apache2 to use vagrant user and group
+  lineinfile: dest=/etc/apache2/envvars regexp="^export {{ item }}=" line="export {{ item }}=vagrant
+  with_items:
+    - APACHE_RUN_USER
+    - APACHE_RUN_GROUP
+
+- name: Change owner on /etc/apache2 to vagrant
+  file: path=/etc/apache2 recurse=yes owner=vagrant group=vagrant state=touch
+  notify: restart apache2
