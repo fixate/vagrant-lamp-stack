@@ -2,7 +2,10 @@
 
 - name: Install packages
   apt: pkg={{ item }} state=present update_cache=yes
+  sudo: True
   with_items:
+    - python-pip
+    - python-dev
     - git-core
     - autoconf
     - bison
@@ -12,4 +15,6 @@
     - libreadline6-dev
     - zlib1g-dev
     - libncurses5-dev
+    - nfs-common
   tags: packages
+

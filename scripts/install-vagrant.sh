@@ -16,3 +16,4 @@ else
   echo "----> Vagrant already installed!"
   exit 0
 fi
+

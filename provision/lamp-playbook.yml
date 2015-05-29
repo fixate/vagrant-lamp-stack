@@ -3,10 +3,8 @@
   name: Install LAMP stack
   vars_files:
     - config.yml
-  sudo: yes
-  sudo_user: vagrant
   roles:
     - common
-    - www
     - php
     - mysql
+    - web

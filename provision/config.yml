@@ -1,2 +1,16 @@
 ---
-apache_version: 2.2
+apache_version: 2.2.22-13+deb7u4
+apache_modules:
+  - php5
+  - rewrite
+
+php_version: 5.4.36-0+deb7u3
+php_modules:
+  - php5-common
+  - php5-curl
+  - php5-mysql
+  - php5-gd
+
+mysql:
+  version: 5.5.41-0+wheezy1
+  root_password: password

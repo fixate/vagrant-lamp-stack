@@ -8,14 +8,36 @@ BOX = {
 }.freeze
 
 PORTS = {
-	www: { guest: 80, host: 8000 },
+	www: { guest: 80, host: 3000 },
 	mysql: { guest: 3306, host: 8306 }
 }
 
+ENV.instance_eval do
+  VARIABLES_REGEX = /\$([a-zA-Z_]+[a-zA-Z0-9_]*)|\$\{(.+)\}/.freeze
+
+  def expand_variables(s)
+    s.gsub(VARIABLES_REGEX) { self[$1||$2]  }
+  end
+end
+
+$env = {}
+
+def load_env!
+  file = File.expand_path('../.vmrc', __FILE__)
+  if File.exists?(file)
+    file = File.open(file, 'r')
+    file.each_line do |line|
+      line.gsub(/export /, "")
+      key, value = line.split "="
+      $env[key] = ENV.expand_variables(value)
+    end
+  end
+ensure
+  file.close if file.is_a?(File)
+end
+
 def sites_path
-  path = ENV['SITES_PATH'] || File.join(ENV['HOME'], 'Sites')
-  `mkdir -p #{path}` unless Dir.exist?(path)
-  path
+  ENV['SITES_PATH'] || $env['SITES_PATH']  || File.join(ENV['HOME'], 'Sites')
 end
 
 def array_wrap(obj)
@@ -24,6 +46,8 @@ def array_wrap(obj)
 end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  load_env!
+
 	config.vm.provider "virtualbox" do |v|
 		v.memory = 1024
 		v.cpus = 2
@@ -36,6 +60,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       config.vm.network "forwarded_port", port
     end
 	end
+
+  config.vm.provision "shell",
+    inline: '[[ -d "/usr/lib/VBoxGuestAdditions" ]] || ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'
 
 	config.vm.box = BOX[:name]
 	config.vm.box_url = BOX[:url]

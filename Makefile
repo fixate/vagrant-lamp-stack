@@ -15,11 +15,11 @@ install-vagrant:
 	@echo "Installing vagrant"
 	@sudo ./scripts/install-vagrant.sh
 
-nfs:
+install-nfs:
 	@echo "Installing nfs-kernel-server"
-	@sudo apt-get install nfs-kernel-server
+	@sudo apt-get install nfs-kernel-server nfs-common
 
-vagrant-provision: nfs
+vagrant-provision: install-nfs
 	@echo "Provisioning virtual machine"
 	@vagrant plugin install vagrant-vbguest
 	@vagrant plugin install vagrant-share

@@ -1,5 +1,30 @@
 ---
 
-- name: Install mysql
-  apt: name="mysql=5.5.41-0+wheezy1" state=present
-  tag: sql
+- name: mysql | Install mysql
+  apt: 'name="mysql-server={{ mysql.version }}" state=present'
+  sudo: True
+  tags: sql
+
+- name: mysql | Install mysql packages
+  apt: name={{ item }} state=present
+  sudo: True
+  with_items:
+    - mysql-client
+    - libmysqlclient-dev
+  tags: sql
+
+- name: Mysql pip packages needed by ansible
+  pip: name={{ item }} state=present
+  sudo: True
+  with_items:
+    - MySQL-python
+
+- name: mysql | Update root password for all root accounts
+  mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
+  with_items:
+    - 127.0.0.1
+    - %
+    - localhost
+
+- name: mysql | Add application user (user: app, password: password)
+  mysql_user name=app host=% password=password
