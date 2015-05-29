@@ -12,7 +12,7 @@
   notify: restart apache2
 
 - name: Set apache2 to use vagrant user and group
-  lineinfile: dest=/etc/apache2/envvars regexp="^export {{ item }}=" line="export {{ item }}=vagrant
+  lineinfile: dest=/etc/apache2/envvars regexp="^export {{ item }}=" line="export {{ item }}=vagrant"
   with_items:
     - APACHE_RUN_USER
     - APACHE_RUN_GROUP

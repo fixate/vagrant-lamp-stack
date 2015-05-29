@@ -19,12 +19,6 @@
   with_items:
     - MySQL-python
 
-- name: mysql | Update root password for all root accounts
-  mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mysql.root_password }} login_user=root login_password={{ mysql.root_password }}
-  with_items:
-    - 127.0.0.1
-    - %
-    - localhost
-
-- name: mysql | Add application user (user: app, password: password)
-  mysql_user name=app host=% password=password
+- name: mysql | Add application user
+  sudo: True
+  mysql_user: name=app host=% password=password login_user=root login_password=password
