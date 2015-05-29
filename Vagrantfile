@@ -47,7 +47,6 @@ end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   load_env!
-  puts $env
 
 	config.vm.provider "virtualbox" do |v|
 		v.memory = 1024
