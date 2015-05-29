@@ -62,7 +62,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	end
 
   config.vm.provision "shell",
-    inline: '[[ -d "/usr/lib/VBoxGuestAdditions" ]] || ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions'
+    inline: <<-SHELL
+      [[ -d "/usr/lib/VBoxGuestAdditions" ]] || ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions
+      curl -o /home/vagrant/new_site.sh https://gist.githubusercontent.com/sdbondi/37e5e02fafb8cd255118/raw/cdf238c58ea322a0a23351e279b01414ac0c6dd7/new_site.sh
+    SHELL
 
 	config.vm.box = BOX[:name]
 	config.vm.box_url = BOX[:url]
