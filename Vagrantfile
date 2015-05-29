@@ -25,15 +25,15 @@ $env = {}
 def load_env!
   file = File.expand_path('../.vmrc', __FILE__)
   if File.exists?(file)
-    file = File.open(file, 'r')
-    file.each_line do |line|
-      line.gsub(/export /, "")
-      key, value = line.split "="
-      $env[key] = ENV.expand_variables(value)
+    File.open(file, 'r') do |f|
+      f.each_line do |line|
+        line = line.gsub(/^export /, "").strip
+        key, value = line.split "="
+        puts "#{key}=#{ENV.expand_variables(value)}"
+        $env[key] = ENV.expand_variables(value)
+      end
     end
   end
-ensure
-  file.close if file.is_a?(File)
 end
 
 def sites_path
@@ -47,6 +47,7 @@ end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   load_env!
+  puts $env
 
 	config.vm.provider "virtualbox" do |v|
 		v.memory = 1024
