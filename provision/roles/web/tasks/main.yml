@@ -1,0 +1,12 @@
+---
+- name: Installing apache2
+  apt: 'name="apache2={{ apache_version }}" state=present'
+  sudo: True
+  tags: web
+
+- name: Enable apache modules
+  apache2_module: name={{ item }} state=present
+  sudo: True
+  tags: web
+  with_items: apache_modules
+  notify: restart apache2

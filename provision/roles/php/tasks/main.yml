@@ -1,0 +1,11 @@
+---
+- name: Installing php5
+  apt: 'name="php5={{ php_version }}" state=present'
+  sudo: True
+  tags: php
+
+- name: Installing php extensions
+  apt: name={{ item }} state=present
+  with_items: php_modules
+  sudo: True
+  tags: php
